@@ -129,6 +129,11 @@
 
   .empty{ text-align:center; color:var(--gray); font-size:13px; padding:24px 10px; }
 
+  .mailbar{ border:1px dashed var(--border-soft); border-radius:9px; padding:10px 12px; margin-bottom:12px; background:#fafcff; }
+  .mailbar .btn.small{ width:100%; margin-top:0; }
+  .mailbar details.help{ margin-top:8px; }
+  .btn.mini.mail{ border-color:var(--gold); color:var(--gold); }
+
   details.help{ margin-top:6px; }
   details.help summary{ cursor:pointer; font-size:12.5px; color:var(--navy); font-weight:700; padding:4px 0; }
   details.help .body{ font-size:12px; color:var(--gray); line-height:1.8; padding:8px 2px 2px; }
@@ -225,6 +230,19 @@
       <span class="count" id="list_count">0件</span>
       <label class="toggle-done"><input type="checkbox" id="show_done" onchange="renderList()"> 入力済みも表示</label>
     </div>
+
+    <div class="mailbar">
+      <button type="button" class="btn small" onclick="mailAll()">✉️ 未入力をまとめてメール送信</button>
+      <details class="help">
+        <summary>送信先メールアドレスの設定</summary>
+        <div class="body">
+          <label for="mail_to" style="margin-top:2px;">送信先（自分の職場アドレスなど）</label>
+          <input type="text" id="mail_to" inputmode="email" placeholder="例：yamaguchi-ube@example.go.jp" oninput="saveMailTo()">
+          <p class="note">一度入れておくと次回から自動で入ります。空欄のままでも、宛先を手で入れて送れます。ボタンを押すと、宛先と本文が入った状態でメール画面が開きますので、送信ボタンを押してください。</p>
+        </div>
+      </details>
+    </div>
+
     <div id="list"></div>
   </div>
 
@@ -429,6 +447,70 @@ function toggleDone(id){
   renderList();
 }
 
+/* ===== メール送信 ===== */
+// メール作成画面を開くだけの機能です。実際に送るかどうかは、
+// メールアプリの画面でご自身が「送信」を押して判断してください。
+const MAILTO_KEY = 'ext-phone-memo-mailto';
+
+function saveMailTo(){
+  try{ localStorage.setItem(MAILTO_KEY, document.getElementById('mail_to').value.trim()); }catch(err){}
+}
+function loadMailTo(){
+  let v = '';
+  try{ v = localStorage.getItem(MAILTO_KEY) || ''; }catch(err){}
+  const el = document.getElementById('mail_to');
+  if(el) el.value = v;
+}
+
+// メモ1件分の本文を組み立てる
+function memoToText(m){
+  const L = TIME_LABELS[m.type] || TIME_LABELS['到着'];
+  const lines = [];
+  lines.push(`■ ${mdFmt(m.date)}　${m.type||''}　${m.carrier||'（運航者未記入）'}　${m.flight?('便名'+m.flight):''}`.trim());
+  lines.push(`延長時刻（いつまで）：${m.time || '－'}`);
+  lines.push(`延長理由：${m.reason || '－'}`);
+  lines.push(`許可時刻：${m.received || '－'}`);
+  lines.push(`タワー伝達①（申請承認時）：${m.towerTime || '－'}`);
+  lines.push(`${L.landing}：${m.landingTime || '－'}`);
+  lines.push(`${L.blockin}：${m.blockinTime || '－'}`);
+  lines.push(`タワー伝達②（ブロックイン後）：${m.towerTime2 || '－'}`);
+  return lines.join('\r\n');
+}
+
+function openMail(subject, body){
+  // 宛先と本文を入れた状態でメール画面を開きます。送信ボタンはご自身で押してください。
+  const to = (document.getElementById('mail_to').value || '').trim();
+  const url = 'mailto:' + encodeURIComponent(to)
+    + '?subject=' + encodeURIComponent(subject)
+    + '&body=' + encodeURIComponent(body);
+  // 端末によっては極端に長いメールは開けないため、目安を超えたら知らせる
+  if(url.length > 8000){
+    alert('件数が多く、1通にまとめきれませんでした。「入力済み」にして件数を減らすか、メモを1件ずつ送信してください。');
+    return;
+  }
+  location.href = url;
+}
+
+function mailOne(id){
+  const m = memos.find(m=>m.id===id);
+  if(!m) return;
+  const subject = `延長電話メモ　${mdFmt(m.date)} ${m.type||''} ${m.carrier||''}${m.flight?(' 便名'+m.flight):''}`;
+  const body = memoToText(m) + '\r\n\r\n---\r\n延長電話メモ（山口宇部空港出張所）より送信';
+  openMail(subject, body);
+}
+
+function mailAll(){
+  const targets = memos.filter(m=>!m.done);
+  if(targets.length === 0){
+    alert('未入力のメモがありません。（「入力済み」にしたメモは対象外です）');
+    return;
+  }
+  const subject = `延長電話メモ　未入力ぶん ${targets.length}件`;
+  const body = targets.map(memoToText).join('\r\n\r\n')
+    + '\r\n\r\n---\r\n延長電話メモ（山口宇部空港出張所）より送信';
+  openMail(subject, body);
+}
+
 // 一覧での短い表示名（到着/出発で呼び名が変わるため）
 function shortLabel(type, which){
   if(type==='出発') return which==='landing' ? 'ATD' : '不帰投点通過';
@@ -458,6 +540,7 @@ function renderList(){
       <div class="actions">
         <button type="button" class="btn mini done-btn ${m.done?'is-done':''}" onclick="toggleDone(${m.id})">${m.done?'✔ 入力済み':'未入力'}</button>
         <button type="button" class="btn mini" onclick="editMemo(${m.id})">編集</button>
+        <button type="button" class="btn mini mail" onclick="mailOne(${m.id})">✉️ メール</button>
         <button type="button" class="btn mini danger" onclick="deleteMemo(${m.id})">削除</button>
       </div>
     </div>
@@ -466,6 +549,7 @@ function renderList(){
 
 function init(){
   loadFontSize();
+  loadMailTo();
   load();
   resetForm();
   renderList();
