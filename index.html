@@ -235,11 +235,14 @@
 
     <div class="mailbar">
       <button type="button" class="btn small" onclick="mailAll()">✉️ 未入力をまとめてメール送信</button>
+      <button type="button" class="btn small secondary" onclick="shareBackup()">📤 バックアップをメールに添付して送る</button>
       <button type="button" class="btn small secondary" onclick="exportBackup()">💾 バックアップをファイルに保存</button>
       <details class="help">
         <summary>バックアップについて・復元</summary>
         <div class="body">
-          <p>「バックアップをファイルに保存」を押すと、メモの内容をファイル（JSON）として書き出します。このファイルをパソコンに移し、報告書作成ツールの「入力（延長）」タブにある「📱 iPhoneアプリ「延長電話メモ」の内容を取り込む」で選ぶと、メモの内容がまとめて登録されます。</p>
+          <p><b>メールに添付して送る</b>…押すとiPhoneの共有メニューが開きます。「メール」を選ぶと、バックアップファイルが添付された状態でメールが作成されます。パソコンでそのメールを開き、添付ファイルを保存して使ってください。</p>
+          <p><b>ファイルに保存</b>…iPhoneの「ファイル」アプリに保存します。共有メニューが使えないときはこちらをお使いください。</p>
+          <p>書き出したファイルは、報告書作成ツールの「入力（延長）」タブにある「📱 iPhoneアプリ「延長電話メモ」の内容を取り込む」で選ぶと、メモの内容がまとめて登録されます。</p>
           <p class="note">Safariの設定で「履歴とWebサイトデータを消去」をするとメモは消えてしまいます。月に一度でもこのファイルを書き出しておくと安心です。</p>
           <label for="restoreInput" style="margin-top:10px;">書き出したファイルから復元する</label>
           <input type="file" id="restoreInput" accept="application/json,.json" onchange="importBackup(event)">
@@ -463,6 +466,47 @@ function toggleDone(id){
 /* ===== バックアップの書き出し・復元 ===== */
 // パソコンの「報告書作成ツール」の取り込み機能がそのまま読める形（memos配列）で書き出します。
 // 端末の中でファイルを作るだけで、どこにも送信しません。
+// バックアップの中身とファイル名を作る（保存・共有で共通）
+function buildBackup(){
+  const d = new Date();
+  return {
+    json: JSON.stringify({
+      app: '延長電話メモ',
+      exportedAt: new Date().toISOString(),
+      memos: memos
+    }, null, 2),
+    filename: `延長電話メモ_${d.getFullYear()}${pad(d.getMonth()+1)}${pad(d.getDate())}.json`
+  };
+}
+
+// iPhoneの共有メニューからメールに添付して送る。
+// メールの仕組み上、ファイルの添付は共有メニュー経由でしか行えないため、この方法をとっています。
+async function shareBackup(){
+  if(memos.length === 0){
+    alert('保存するメモがありません。');
+    return;
+  }
+  const { json, filename } = buildBackup();
+  const file = new File([json], filename, { type: 'application/json' });
+
+  if(navigator.canShare && navigator.canShare({ files: [file] })){
+    try{
+      await navigator.share({
+        files: [file],
+        title: '延長電話メモ バックアップ',
+        text: `延長電話メモのバックアップです（${memos.length}件）。`
+      });
+    }catch(err){
+      // 共有をやめた場合は何もしない
+      if(err && err.name !== 'AbortError'){
+        alert('共有できませんでした。「💾 バックアップをファイルに保存」をお試しください。');
+      }
+    }
+    return;
+  }
+  alert('このiPhoneでは共有メニューからの添付に対応していないようです。\n「💾 バックアップをファイルに保存」で保存してから、メールに添付してください。');
+}
+
 function exportBackup(){
   if(memos.length === 0){
     alert('保存するメモがありません。');
