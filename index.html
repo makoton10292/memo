@@ -131,6 +131,8 @@
 
   .mailbar{ border:1px dashed var(--border-soft); border-radius:9px; padding:10px 12px; margin-bottom:12px; background:#fafcff; }
   .mailbar .btn.small{ width:100%; margin-top:0; }
+  .mailbar .btn.small.secondary{ margin-top:8px; }
+  .mailbar input[type=file]{ font-size:13px; width:100%; }
   .mailbar details.help{ margin-top:8px; }
   .btn.mini.mail{ border-color:var(--gold); color:var(--gold); }
 
@@ -233,6 +235,17 @@
 
     <div class="mailbar">
       <button type="button" class="btn small" onclick="mailAll()">✉️ 未入力をまとめてメール送信</button>
+      <button type="button" class="btn small secondary" onclick="exportBackup()">💾 バックアップをファイルに保存</button>
+      <details class="help">
+        <summary>バックアップについて・復元</summary>
+        <div class="body">
+          <p>「バックアップをファイルに保存」を押すと、メモの内容をファイル（JSON）として書き出します。このファイルをパソコンに移し、報告書作成ツールの「入力（延長）」タブにある「📱 iPhoneアプリ「延長電話メモ」の内容を取り込む」で選ぶと、メモの内容がまとめて登録されます。</p>
+          <p class="note">Safariの設定で「履歴とWebサイトデータを消去」をするとメモは消えてしまいます。月に一度でもこのファイルを書き出しておくと安心です。</p>
+          <label for="restoreInput" style="margin-top:10px;">書き出したファイルから復元する</label>
+          <input type="file" id="restoreInput" accept="application/json,.json" onchange="importBackup(event)">
+          <p class="note">いまあるメモは、読み込んだ内容で置き換わります。</p>
+        </div>
+      </details>
       <details class="help">
         <summary>送信先メールアドレスの設定</summary>
         <div class="body">
@@ -445,6 +458,58 @@ function toggleDone(id){
   m.done = !m.done;
   persist();
   renderList();
+}
+
+/* ===== バックアップの書き出し・復元 ===== */
+// パソコンの「報告書作成ツール」の取り込み機能がそのまま読める形（memos配列）で書き出します。
+// 端末の中でファイルを作るだけで、どこにも送信しません。
+function exportBackup(){
+  if(memos.length === 0){
+    alert('保存するメモがありません。');
+    return;
+  }
+  const data = {
+    app: '延長電話メモ',
+    exportedAt: new Date().toISOString(),
+    memos: memos
+  };
+  const blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  const d = new Date();
+  a.href = url;
+  a.download = `延長電話メモ_${d.getFullYear()}${pad(d.getMonth()+1)}${pad(d.getDate())}.json`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+function importBackup(evt){
+  const file = evt.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = e=>{
+    try{
+      const data = JSON.parse(e.target.result);
+      const list = Array.isArray(data) ? data : data.memos;
+      if(!Array.isArray(list)) throw new Error('形式が違います');
+      if(!confirm(`${list.length}件のメモを読み込みます。\nいま入っているメモ（${memos.length}件）は置き換わります。よろしいですか？`)){
+        evt.target.value = '';
+        return;
+      }
+      // id が無い・重複する場合に備えて振り直す
+      memos = list.map((m, i) => Object.assign({ done:false }, m, { id: i + 1 }));
+      nextId = memos.length + 1;
+      persist();
+      renderList();
+      alert(`${memos.length}件のメモを読み込みました。`);
+    }catch(err){
+      alert('読み込みに失敗しました。このアプリで書き出したファイルを選んでください。');
+    }
+  };
+  reader.readAsText(file);
+  evt.target.value = '';
 }
 
 /* ===== メール送信 ===== */
