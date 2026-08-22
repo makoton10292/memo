@@ -1,7 +1,7 @@
 // オフラインでも動くようにするための仕組み（サービスワーカー）。
 // 初回アクセス時にファイル一式を端末に保存し、以降はインターネットなしでも表示できます。
 // メモのデータ自体はこのファイルとは別に、端末内(localStorage)に保存されます。
-const CACHE_NAME = 'ext-phone-memo-v1';
+const CACHE_NAME = 'ext-phone-memo-v2';
 const ASSETS = [
   './',
   './index.html',

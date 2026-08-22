@@ -28,45 +28,18 @@
   }
   header{
     background:linear-gradient(135deg,var(--navy-dark),var(--navy) 60%,#154a7c);
-    color:#fff; padding:calc(14px + env(safe-area-inset-top)) 18px 14px;
+    color:#fff; padding:calc(12px + env(safe-area-inset-top)) 18px 12px;
   }
   header h1{ margin:0; font-size:17px; letter-spacing:.02em; }
-  header p{ margin:5px 0 0; font-size:11.5px; opacity:.88; line-height:1.5; }
-  .fontsize{ display:flex; align-items:center; gap:6px; margin-top:10px; }
-  .fontsize span{ font-size:11px; opacity:.85; margin-right:2px; }
-  .fontsize button{
-    min-width:40px; padding:5px 10px; border-radius:7px; font-family:inherit; font-weight:700; cursor:pointer;
-    background:rgba(255,255,255,.14); border:1px solid rgba(255,255,255,.35); color:#fff; font-size:13px;
-  }
-  .fontsize button.active{ background:#fff; color:var(--navy); border-color:#fff; }
+  header p{ margin:4px 0 0; font-size:11.5px; opacity:.88; line-height:1.5; }
 
-  /* 文字サイズの切替（本文まわりだけ拡大・縮小し、レイアウトは崩さない） */
-  body.fs-s{ font-size:14px; }
-  body.fs-m{ font-size:16px; }
-  body.fs-l{ font-size:18px; }
-  body.fs-l label{ font-size:14px; }
-  body.fs-l h2{ font-size:16.5px; }
-  body.fs-l .memo .main{ font-size:16.5px; }
-  body.fs-l .memo .sub{ font-size:14.5px; }
-  body.fs-l .memo .meta{ font-size:13px; }
-  body.fs-l input[type=date], body.fs-l input[type=time], body.fs-l input[type=text], body.fs-l textarea{ font-size:18px; }
-  body.fs-l .seg button, body.fs-l .pillrow button{ font-size:16px; }
-  body.fs-l .btn{ font-size:17px; }
-  body.fs-l .btn.mini{ font-size:14px; }
-  body.fs-s label{ font-size:11px; }
-  body.fs-s h2{ font-size:13.5px; }
-  body.fs-s .memo .main{ font-size:13.5px; }
-  body.fs-s .memo .sub{ font-size:11.5px; }
-  body.fs-s .seg button, body.fs-s .pillrow button{ font-size:13px; }
-  body.fs-s .btn{ font-size:14.5px; }
-
-  main{ max-width:560px; margin:0 auto; padding:14px 12px 60px; }
+  main{ max-width:560px; margin:0 auto; padding:12px 12px 60px; }
 
   .card{
-    background:#fff; border-radius:12px; padding:16px 14px; margin-bottom:14px;
+    background:#fff; border-radius:12px; padding:14px; margin-bottom:14px;
     box-shadow:0 2px 10px rgba(13,59,102,.08); border:1px solid var(--border-soft);
   }
-  h2{ font-size:14.5px; color:var(--navy); margin:0 0 12px; display:flex; align-items:center; gap:7px; }
+  h2{ font-size:14.5px; color:var(--navy); margin:0 0 10px; display:flex; align-items:center; gap:7px; }
   h2::before{ content:""; width:5px; height:15px; background:var(--gold); border-radius:2px; display:inline-block; }
 
   label{ font-size:12px; color:var(--gray); display:block; margin:12px 0 5px; font-weight:700; }
@@ -76,34 +49,52 @@
     font-size:16px; font-family:inherit; background:#fbfcfe; -webkit-appearance:none;
   }
   input:focus, textarea:focus{ outline:none; border-color:var(--navy-light); box-shadow:0 0 0 3px rgba(27,90,148,.15); background:#fff; }
-  textarea{ resize:vertical; min-height:56px; }
+  textarea{ resize:vertical; min-height:52px; }
+
+  .timerow{ display:flex; gap:8px; align-items:center; }
+  .timerow input{ flex:1; }
+  .nowbtn{
+    flex:0 0 auto; padding:11px 14px; border-radius:9px; border:1.5px solid var(--navy-light);
+    background:#fff; color:var(--navy-light); font-size:13.5px; font-weight:700; font-family:inherit; cursor:pointer;
+  }
 
   .seg{ display:flex; gap:8px; }
   .seg button{
-    flex:1; padding:12px 6px; border-radius:9px; border:1.5px solid var(--border-soft);
-    background:#fbfcfe; font-size:14.5px; font-weight:700; color:var(--gray); font-family:inherit; cursor:pointer;
+    flex:1; padding:14px 6px; border-radius:9px; border:1.5px solid var(--border-soft);
+    background:#fbfcfe; font-size:15.5px; font-weight:700; color:var(--gray); font-family:inherit; cursor:pointer;
   }
   .seg button.active{ background:var(--navy); border-color:var(--navy); color:#fff; }
 
   .pillrow{ display:flex; gap:8px; flex-wrap:wrap; }
   .pillrow button{
-    padding:9px 15px; border-radius:999px; border:1.5px solid var(--border-soft);
-    background:#fbfcfe; font-size:13.5px; font-weight:700; color:var(--gray); font-family:inherit; cursor:pointer;
+    padding:11px 16px; border-radius:999px; border:1.5px solid var(--border-soft);
+    background:#fbfcfe; font-size:14px; font-weight:700; color:var(--gray); font-family:inherit; cursor:pointer;
   }
   .pillrow button.active{ background:var(--gold); border-color:var(--gold); color:#fff; }
 
+  .inline{ display:flex; gap:8px; }
+  .inline > div{ flex:1; }
+
   .btn{
-    width:100%; background:var(--navy); color:#fff; border:none; padding:14px 18px; border-radius:10px;
-    cursor:pointer; font-size:15.5px; font-family:inherit; font-weight:700; margin-top:16px;
+    width:100%; background:var(--navy); color:#fff; border:none; padding:16px 18px; border-radius:10px;
+    cursor:pointer; font-size:16px; font-family:inherit; font-weight:700; margin-top:16px;
   }
   .btn:active{ background:var(--navy-dark); }
   .btn.secondary{ background:#fff; color:var(--navy); border:1.5px solid var(--navy); margin-top:8px; }
-  .btn.small{ width:auto; padding:9px 14px; font-size:13px; margin-top:0; border-radius:8px; }
 
   .edit-banner{
     background:var(--yellow); border:1.5px solid var(--yellow-border); color:var(--navy);
     border-radius:9px; padding:10px 12px; margin-bottom:12px; font-size:12.5px; font-weight:700; line-height:1.6;
   }
+
+  details.later{ margin-top:14px; border-top:1px dashed var(--border-soft); padding-top:10px; }
+  details.later > summary{
+    cursor:pointer; font-size:13px; color:var(--navy); font-weight:800; padding:8px 0; list-style:none;
+  }
+  details.later > summary::-webkit-details-marker{ display:none; }
+  details.later > summary::before{ content:"▶ "; font-size:11px; }
+  details.later[open] > summary::before{ content:"▼ "; }
+  details.later > summary span.hint{ font-weight:600; color:var(--gray); font-size:11.5px; }
 
   .listhead{ display:flex; align-items:center; justify-content:space-between; margin-bottom:10px; }
   .listhead .count{ font-size:12.5px; color:var(--gray); font-weight:700; }
@@ -115,38 +106,33 @@
     box-shadow:0 1px 4px rgba(13,59,102,.06);
   }
   .memo.done{ opacity:.55; }
+  .memo.lack{ border-left:4px solid var(--gold); }
   .memo .row1{ display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-bottom:5px; }
   .memo .badge{ font-size:11px; font-weight:700; padding:2px 9px; border-radius:999px; background:var(--sky); color:var(--navy); }
   .memo .badge.dep{ background:#fbf3e3; color:var(--gold); }
   .memo .main{ font-size:14.5px; font-weight:700; color:var(--ink); }
   .memo .sub{ font-size:12.5px; color:var(--gray); margin:2px 0; line-height:1.6; }
   .memo .meta{ font-size:11px; color:#8a94a3; margin-top:4px; }
+  .memo .lackmsg{ font-size:11.5px; color:var(--gold); font-weight:700; margin-top:5px; }
   .memo .actions{ display:flex; gap:8px; margin-top:10px; flex-wrap:wrap; }
-  .memo .actions button{ font-family:inherit; }
-  .btn.mini{ padding:7px 12px; font-size:12px; border-radius:7px; border:1px solid var(--navy-light); background:#fff; color:var(--navy-light); font-weight:700; cursor:pointer; }
+  .btn.mini{ padding:9px 13px; font-size:12.5px; border-radius:7px; border:1px solid var(--navy-light); background:#fff; color:var(--navy-light); font-weight:700; cursor:pointer; font-family:inherit; }
   .btn.mini.done-btn.is-done{ background:var(--green); border-color:var(--green); color:#fff; }
   .btn.mini.danger{ border-color:#e3b2ae; color:var(--red); }
 
   .empty{ text-align:center; color:var(--gray); font-size:13px; padding:24px 10px; }
 
-  .mailbar{ border:1px dashed var(--border-soft); border-radius:9px; padding:10px 12px; margin-bottom:12px; background:#fafcff; }
-  .mailbar .btn.small{ width:100%; margin-top:0; }
-  .mailbar .btn.small.secondary{ margin-top:8px; }
-  .mailbar input[type=file]{ font-size:13px; width:100%; }
-  .mailbar details.help{ margin-top:8px; }
-  .btn.mini.mail{ border-color:var(--gold); color:var(--gold); }
-
-  details.help{ margin-top:6px; }
+  details.help{ margin-top:10px; }
   details.help summary{ cursor:pointer; font-size:12.5px; color:var(--navy); font-weight:700; padding:4px 0; }
   details.help .body{ font-size:12px; color:var(--gray); line-height:1.8; padding:8px 2px 2px; }
   details.help ol{ margin:6px 0; padding-left:20px; }
   details.help li{ margin-bottom:6px; }
 
   .note{ font-size:11.5px; color:var(--gray); line-height:1.7; margin:8px 0 0; }
-
-  .subhead{
-    font-size:12.5px; color:var(--navy); font-weight:800; margin:18px 0 2px; padding-top:14px;
-    border-top:1px dashed var(--border-soft);
+  .datebar{ font-size:12px; color:var(--gray); margin-bottom:10px; }
+  .datebar b{ color:var(--ink); }
+  .datebar button{
+    background:none; border:none; color:var(--navy-light); font-size:12px; font-weight:700;
+    text-decoration:underline; cursor:pointer; font-family:inherit; padding:2px 4px;
   }
 </style>
 </head>
@@ -155,22 +141,21 @@
 <header>
   <h1>📞 延長電話メモ</h1>
   <p>山口宇部空港出張所　運用時間臨時延長の電話連絡メモ用<br>メモはこの端末の中だけに保存されます（外部送信・同期はしません）</p>
-  <div class="fontsize">
-    <span>文字サイズ</span>
-    <button type="button" id="fs_s" onclick="setFontSize('s')">小</button>
-    <button type="button" id="fs_m" onclick="setFontSize('m')">中</button>
-    <button type="button" id="fs_l" onclick="setFontSize('l')">大</button>
-  </div>
 </header>
 
 <main>
 
   <div class="card">
-    <h2 id="form-title">電話の内容をメモする</h2>
+    <h2 id="form-title">電話中はここだけ</h2>
     <div id="edit_banner" class="edit-banner" style="display:none;"></div>
 
-    <label>発生日</label>
-    <input type="date" id="f_date">
+    <div class="datebar">
+      発生日：<b id="date_label">-</b>
+      <button type="button" onclick="toggleDateEdit()">変更</button>
+      <div id="date_edit" style="display:none; margin-top:6px;">
+        <input type="date" id="f_date" onchange="updateDateLabel()">
+      </div>
+    </div>
 
     <label>区分</label>
     <div class="seg">
@@ -178,45 +163,71 @@
       <button type="button" id="seg_dep" onclick="setType('出発')">出発</button>
     </div>
 
-    <label>運航者（タップで選択）</label>
+    <label>運航者（タップで便名も自動入力）</label>
     <div class="pillrow" id="carrier_pills">
       <button type="button" onclick="setCarrier('JAL')">JAL</button>
       <button type="button" onclick="setCarrier('ANA')">ANA</button>
       <button type="button" onclick="setCarrier('SFJ')">SFJ</button>
-      <button type="button" onclick="setCarrier('')">その他／直接入力</button>
+      <button type="button" onclick="setCarrier('')">その他</button>
     </div>
     <input type="text" id="f_carrier" placeholder="例：日本航空、ANAウイングス、など" style="margin-top:8px; display:none;">
 
-    <label>便名（数字のみ）</label>
-    <input type="text" id="f_flight" inputmode="numeric" placeholder="例：297">
-
-    <label>延長時刻　いつまで</label>
-    <input type="time" id="f_time">
+    <div class="inline" style="margin-top:12px;">
+      <div>
+        <label>便名（数字）</label>
+        <input type="text" id="f_flight" inputmode="numeric" placeholder="例：297">
+      </div>
+      <div>
+        <label>延長時刻（いつまで）</label>
+        <input type="time" id="f_time">
+      </div>
+    </div>
 
     <label>延長理由（聞き取れた範囲で）</label>
     <textarea id="f_reason" placeholder="例：貨物積み込みの遅れのため"></textarea>
 
-    <label>許可時刻</label>
-    <input type="time" id="f_received">
-
-    <label>タワー伝達時刻①（申請承認時）</label>
-    <input type="time" id="f_tower_time">
-
     <button class="btn" id="save_btn" onclick="saveMemo()">＋ 一覧に追加</button>
     <button class="btn secondary" id="cancel_btn" onclick="cancelEdit()" style="display:none;">編集をやめる</button>
 
-    <div class="subhead">あとで記入でOK（登録後に一覧の「編集」からでも入力できます）</div>
-    <label id="lbl_landing">ランディングタイム</label>
-    <input type="time" id="f_landing_time">
-    <label id="lbl_blockin">ブロックインタイム</label>
-    <input type="time" id="f_blockin_time">
-    <label>タワー伝達時刻②（ブロックイン後の連絡）</label>
-    <input type="time" id="f_tower_time2">
+    <details class="later" id="later_box">
+      <summary>時刻の記録（許可・タワー伝達・実績）　<span class="hint">あとで記入でOK</span></summary>
+
+      <label>許可時刻</label>
+      <div class="timerow">
+        <input type="time" id="f_received">
+        <button type="button" class="nowbtn" onclick="setNow('f_received')">今</button>
+      </div>
+
+      <label>タワー伝達時刻①（申請承認時）</label>
+      <div class="timerow">
+        <input type="time" id="f_tower_time">
+        <button type="button" class="nowbtn" onclick="setNow('f_tower_time')">今</button>
+      </div>
+
+      <label>ランディングタイム</label>
+      <div class="timerow">
+        <input type="time" id="f_landing_time">
+        <button type="button" class="nowbtn" onclick="setNow('f_landing_time')">今</button>
+      </div>
+
+      <label>ブロックインタイム</label>
+      <div class="timerow">
+        <input type="time" id="f_blockin_time">
+        <button type="button" class="nowbtn" onclick="setNow('f_blockin_time')">今</button>
+      </div>
+
+      <label>タワー伝達時刻②（ブロックイン後の連絡）</label>
+      <div class="timerow">
+        <input type="time" id="f_tower_time2">
+        <button type="button" class="nowbtn" onclick="setNow('f_tower_time2')">今</button>
+      </div>
+    </details>
 
     <details class="help">
       <summary>使い方・データの保存について</summary>
       <div class="body">
         <p>このアプリは、様式1（正式な報告書）が届く前に、電話で聞いた内容をとりあえず書き留めておくための「一時メモ」です。あとで様式1が届いたら、内容を見比べながら、パソコンの本体ツール（報告書作成ツール）へあらためて入力してください。</p>
+        <p><b>電話中は上の欄だけ</b>を埋めて「一覧に追加」を押せば十分です。許可時刻は自動で「今の時刻」が入ります。タワー伝達や実績の時刻は、電話を切ったあとに一覧の「編集」から追記してください。</p>
         <ol>
           <li>初回だけ：SafariでこのページのURLを開き、共有ボタン（□に↑）→「ホーム画面に追加」を押します。</li>
           <li>以降は、ホーム画面の「延長メモ」アイコンをタップするだけで、アプリとして起動します。</li>
@@ -232,33 +243,6 @@
       <span class="count" id="list_count">0件</span>
       <label class="toggle-done"><input type="checkbox" id="show_done" onchange="renderList()"> 入力済みも表示</label>
     </div>
-
-    <div class="mailbar">
-      <button type="button" class="btn small" onclick="mailAll()">✉️ 未入力をまとめてメール送信</button>
-      <button type="button" class="btn small secondary" onclick="shareBackup()">📤 バックアップをメールに添付して送る</button>
-      <button type="button" class="btn small secondary" onclick="exportBackup()">💾 バックアップをファイルに保存</button>
-      <details class="help">
-        <summary>バックアップについて・復元</summary>
-        <div class="body">
-          <p><b>メールに添付して送る</b>…押すとiPhoneの共有メニューが開きます。「メール」を選ぶと、バックアップファイルが添付された状態でメールが作成されます。パソコンでそのメールを開き、添付ファイルを保存して使ってください。</p>
-          <p><b>ファイルに保存</b>…iPhoneの「ファイル」アプリに保存します。共有メニューが使えないときはこちらをお使いください。</p>
-          <p>書き出したファイルは、報告書作成ツールの「入力（延長）」タブにある「📱 iPhoneアプリ「延長電話メモ」の内容を取り込む」で選ぶと、メモの内容がまとめて登録されます。</p>
-          <p class="note">Safariの設定で「履歴とWebサイトデータを消去」をするとメモは消えてしまいます。月に一度でもこのファイルを書き出しておくと安心です。</p>
-          <label for="restoreInput" style="margin-top:10px;">書き出したファイルから復元する</label>
-          <input type="file" id="restoreInput" accept="application/json,.json" onchange="importBackup(event)">
-          <p class="note">いまあるメモは、読み込んだ内容で置き換わります。</p>
-        </div>
-      </details>
-      <details class="help">
-        <summary>送信先メールアドレスの設定</summary>
-        <div class="body">
-          <label for="mail_to" style="margin-top:2px;">送信先（自分の職場アドレスなど）</label>
-          <input type="text" id="mail_to" inputmode="email" placeholder="例：yamaguchi-ube@example.go.jp" oninput="saveMailTo()">
-          <p class="note">一度入れておくと次回から自動で入ります。空欄のままでも、宛先を手で入れて送れます。ボタンを押すと、宛先と本文が入った状態でメール画面が開きますので、送信ボタンを押してください。</p>
-        </div>
-      </details>
-    </div>
-
     <div id="list"></div>
   </div>
 
@@ -296,42 +280,26 @@ function mdFmt(dateStr){
   if(!dateStr) return '';
   const d = new Date(dateStr+'T00:00:00');
   if(isNaN(d)) return dateStr;
-  return `${d.getMonth()+1}月${d.getDate()}日`;
+  const w = ['日','月','火','水','木','金','土'][d.getDay()];
+  return `${d.getMonth()+1}月${d.getDate()}日(${w})`;
 }
 
-// 様式1の記載に合わせた、区分ごとの時刻欄の呼び名。
-//   到着機 … ATA（着陸時刻）／ランプイン（ブロックイン）
-//   出発機 … ATD（離陸時刻）／不帰投点通過時刻（ノーリターンポイント）
-const TIME_LABELS = {
-  '到着': { landing:'ATA／着陸時刻', blockin:'ランプイン／ブロックイン' },
-  '出発': { landing:'ATD／離陸時刻', blockin:'不帰投点通過時刻／ノーリターンポイント' }
-};
+// 時刻欄に「今の時刻」を入れる
+function setNow(id){ document.getElementById(id).value = nowTimeStr(); }
+
+// 発生日は普段は表示だけ。「変更」を押したときだけ日付入力欄を出す。
+function toggleDateEdit(){
+  const box = document.getElementById('date_edit');
+  box.style.display = (box.style.display === 'none') ? 'block' : 'none';
+}
+function updateDateLabel(){
+  document.getElementById('date_label').textContent = mdFmt(document.getElementById('f_date').value);
+}
 
 function setType(t){
   curType = t;
   document.getElementById('seg_arr').classList.toggle('active', t==='到着');
   document.getElementById('seg_dep').classList.toggle('active', t==='出発');
-  const L = TIME_LABELS[t] || TIME_LABELS['到着'];
-  document.getElementById('lbl_landing').textContent = L.landing;
-  document.getElementById('lbl_blockin').textContent = L.blockin;
-}
-
-/* ===== 文字サイズ（小・中・大） ===== */
-const FONT_KEY = 'ext-phone-memo-fontsize';
-function setFontSize(size){
-  document.body.classList.remove('fs-s','fs-m','fs-l');
-  document.body.classList.add('fs-'+size);
-  ['s','m','l'].forEach(k=>{
-    const b = document.getElementById('fs_'+k);
-    if(b) b.classList.toggle('active', k===size);
-  });
-  try{ localStorage.setItem(FONT_KEY, size); }catch(err){}
-}
-function loadFontSize(){
-  let size = 'm';
-  try{ size = localStorage.getItem(FONT_KEY) || 'm'; }catch(err){}
-  if(!['s','m','l'].includes(size)) size = 'm';
-  setFontSize(size);
 }
 // 運航者ごとの定期便名。運航者をタップすると便名欄に自動で入りますが、
 // 臨時便などで違う場合は、便名欄をそのまま書き換えられます。
@@ -352,22 +320,21 @@ function setCarrier(abbr, fillFlight){
   });
   const carrierInput = document.getElementById('f_carrier');
   if(abbr){
-    // JAL/ANA/SFJのタップ選択時は、直接入力欄を隠して値を自動セットする
     carrierInput.value = abbr;
     carrierInput.style.display = 'none';
     if(fillFlight && FLIGHT_BY_CARRIER[abbr]){
       document.getElementById('f_flight').value = FLIGHT_BY_CARRIER[abbr];
     }
   } else {
-    // 「その他／直接入力」を選んだときだけ、直接入力欄を表示する
     carrierInput.style.display = 'block';
     if(['JAL','ANA','SFJ'].includes(carrierInput.value)) carrierInput.value = '';
-    carrierInput.focus();
   }
 }
 
 function resetForm(){
   document.getElementById('f_date').value = todayStr();
+  updateDateLabel();
+  document.getElementById('date_edit').style.display = 'none';
   document.getElementById('f_carrier').value = '';
   document.getElementById('f_flight').value = '';
   document.getElementById('f_time').value = DEFAULT_EXT_TIME;
@@ -377,6 +344,7 @@ function resetForm(){
   document.getElementById('f_landing_time').value = '';
   document.getElementById('f_blockin_time').value = '';
   document.getElementById('f_tower_time2').value = '';
+  document.getElementById('later_box').open = false;
   setType('到着');
   setCarrier('');
 }
@@ -393,7 +361,7 @@ function hideEditBanner(){
   document.getElementById('edit_banner').style.display = 'none';
   document.getElementById('save_btn').textContent = '＋ 一覧に追加';
   document.getElementById('cancel_btn').style.display = 'none';
-  document.getElementById('form-title').textContent = '電話の内容をメモする';
+  document.getElementById('form-title').textContent = '電話中はここだけ';
 }
 
 function saveMemo(){
@@ -430,6 +398,7 @@ function editMemo(id){
   const m = memos.find(m=>m.id===id);
   if(!m) return;
   document.getElementById('f_date').value = m.date || '';
+  updateDateLabel();
   document.getElementById('f_carrier').value = m.carrier || '';
   document.getElementById('f_flight').value = m.flight || '';
   document.getElementById('f_time').value = m.time || '';
@@ -442,6 +411,8 @@ function editMemo(id){
   setType(m.type || '到着');
   // 編集時は保存されている便名をそのまま残すため、便名の自動入力はしない
   setCarrier(['JAL','ANA','SFJ'].includes(m.carrier) ? m.carrier : '', false);
+  // 追記のための編集が多いので、時刻欄は開いた状態で表示する
+  document.getElementById('later_box').open = true;
   editingId = id;
   showEditBanner(m);
   window.scrollTo({top:0, behavior:'smooth'});
@@ -463,167 +434,14 @@ function toggleDone(id){
   renderList();
 }
 
-/* ===== バックアップの書き出し・復元 ===== */
-// パソコンの「報告書作成ツール」の取り込み機能がそのまま読める形（memos配列）で書き出します。
-// 端末の中でファイルを作るだけで、どこにも送信しません。
-// バックアップの中身とファイル名を作る（保存・共有で共通）
-function buildBackup(){
-  const d = new Date();
-  return {
-    json: JSON.stringify({
-      app: '延長電話メモ',
-      exportedAt: new Date().toISOString(),
-      memos: memos
-    }, null, 2),
-    filename: `延長電話メモ_${d.getFullYear()}${pad(d.getMonth()+1)}${pad(d.getDate())}.json`
-  };
-}
-
-// iPhoneの共有メニューからメールに添付して送る。
-// メールの仕組み上、ファイルの添付は共有メニュー経由でしか行えないため、この方法をとっています。
-async function shareBackup(){
-  if(memos.length === 0){
-    alert('保存するメモがありません。');
-    return;
-  }
-  const { json, filename } = buildBackup();
-  const file = new File([json], filename, { type: 'application/json' });
-
-  if(navigator.canShare && navigator.canShare({ files: [file] })){
-    try{
-      await navigator.share({
-        files: [file],
-        title: '延長電話メモ バックアップ',
-        text: `延長電話メモのバックアップです（${memos.length}件）。`
-      });
-    }catch(err){
-      // 共有をやめた場合は何もしない
-      if(err && err.name !== 'AbortError'){
-        alert('共有できませんでした。「💾 バックアップをファイルに保存」をお試しください。');
-      }
-    }
-    return;
-  }
-  alert('このiPhoneでは共有メニューからの添付に対応していないようです。\n「💾 バックアップをファイルに保存」で保存してから、メールに添付してください。');
-}
-
-function exportBackup(){
-  if(memos.length === 0){
-    alert('保存するメモがありません。');
-    return;
-  }
-  const data = {
-    app: '延長電話メモ',
-    exportedAt: new Date().toISOString(),
-    memos: memos
-  };
-  const blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  const d = new Date();
-  a.href = url;
-  a.download = `延長電話メモ_${d.getFullYear()}${pad(d.getMonth()+1)}${pad(d.getDate())}.json`;
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  URL.revokeObjectURL(url);
-}
-
-function importBackup(evt){
-  const file = evt.target.files[0];
-  if(!file) return;
-  const reader = new FileReader();
-  reader.onload = e=>{
-    try{
-      const data = JSON.parse(e.target.result);
-      const list = Array.isArray(data) ? data : data.memos;
-      if(!Array.isArray(list)) throw new Error('形式が違います');
-      if(!confirm(`${list.length}件のメモを読み込みます。\nいま入っているメモ（${memos.length}件）は置き換わります。よろしいですか？`)){
-        evt.target.value = '';
-        return;
-      }
-      // id が無い・重複する場合に備えて振り直す
-      memos = list.map((m, i) => Object.assign({ done:false }, m, { id: i + 1 }));
-      nextId = memos.length + 1;
-      persist();
-      renderList();
-      alert(`${memos.length}件のメモを読み込みました。`);
-    }catch(err){
-      alert('読み込みに失敗しました。このアプリで書き出したファイルを選んでください。');
-    }
-  };
-  reader.readAsText(file);
-  evt.target.value = '';
-}
-
-/* ===== メール送信 ===== */
-// メール作成画面を開くだけの機能です。実際に送るかどうかは、
-// メールアプリの画面でご自身が「送信」を押して判断してください。
-const MAILTO_KEY = 'ext-phone-memo-mailto';
-
-function saveMailTo(){
-  try{ localStorage.setItem(MAILTO_KEY, document.getElementById('mail_to').value.trim()); }catch(err){}
-}
-function loadMailTo(){
-  let v = '';
-  try{ v = localStorage.getItem(MAILTO_KEY) || ''; }catch(err){}
-  const el = document.getElementById('mail_to');
-  if(el) el.value = v;
-}
-
-// メモ1件分の本文を組み立てる
-function memoToText(m){
-  const L = TIME_LABELS[m.type] || TIME_LABELS['到着'];
-  const lines = [];
-  lines.push(`■ ${mdFmt(m.date)}　${m.type||''}　${m.carrier||'（運航者未記入）'}　${m.flight?('便名'+m.flight):''}`.trim());
-  lines.push(`延長時刻（いつまで）：${m.time || '－'}`);
-  lines.push(`延長理由：${m.reason || '－'}`);
-  lines.push(`許可時刻：${m.received || '－'}`);
-  lines.push(`タワー伝達①（申請承認時）：${m.towerTime || '－'}`);
-  lines.push(`${L.landing}：${m.landingTime || '－'}`);
-  lines.push(`${L.blockin}：${m.blockinTime || '－'}`);
-  lines.push(`タワー伝達②（ブロックイン後）：${m.towerTime2 || '－'}`);
-  return lines.join('\r\n');
-}
-
-function openMail(subject, body){
-  // 宛先と本文を入れた状態でメール画面を開きます。送信ボタンはご自身で押してください。
-  const to = (document.getElementById('mail_to').value || '').trim();
-  const url = 'mailto:' + encodeURIComponent(to)
-    + '?subject=' + encodeURIComponent(subject)
-    + '&body=' + encodeURIComponent(body);
-  // 端末によっては極端に長いメールは開けないため、目安を超えたら知らせる
-  if(url.length > 8000){
-    alert('件数が多く、1通にまとめきれませんでした。「入力済み」にして件数を減らすか、メモを1件ずつ送信してください。');
-    return;
-  }
-  location.href = url;
-}
-
-function mailOne(id){
-  const m = memos.find(m=>m.id===id);
-  if(!m) return;
-  const subject = `延長電話メモ　${mdFmt(m.date)} ${m.type||''} ${m.carrier||''}${m.flight?(' 便名'+m.flight):''}`;
-  const body = memoToText(m) + '\r\n\r\n---\r\n延長電話メモ（山口宇部空港出張所）より送信';
-  openMail(subject, body);
-}
-
-function mailAll(){
-  const targets = memos.filter(m=>!m.done);
-  if(targets.length === 0){
-    alert('未入力のメモがありません。（「入力済み」にしたメモは対象外です）');
-    return;
-  }
-  const subject = `延長電話メモ　未入力ぶん ${targets.length}件`;
-  const body = targets.map(memoToText).join('\r\n\r\n')
-    + '\r\n\r\n---\r\n延長電話メモ（山口宇部空港出張所）より送信';
-  openMail(subject, body);
-}
-
-// 一覧での短い表示名（到着/出発で呼び名が変わるため）
-function shortLabel(type, which){
-  if(type==='出発') return which==='landing' ? 'ATD' : '不帰投点通過';
-  return which==='landing' ? 'ATA' : 'ランプイン';
+// あとで書き足す欄が空のままのメモを見つけて知らせる
+function missingFields(m){
+  const miss = [];
+  if(!m.towerTime) miss.push('タワー伝達①');
+  if(!m.landingTime) miss.push('ランディング');
+  if(!m.blockinTime) miss.push('ブロックイン');
+  if(!m.towerTime2) miss.push('タワー伝達②');
+  return miss;
 }
 
 function renderList(){
@@ -636,29 +454,29 @@ function renderList(){
     listEl.innerHTML = '<p class="empty">まだメモがありません。上のフォームから登録してください。</p>';
     return;
   }
-  listEl.innerHTML = visible.map(m => `
-    <div class="memo ${m.done?'done':''}">
+  listEl.innerHTML = visible.map(m => {
+    const miss = missingFields(m);
+    return `
+    <div class="memo ${m.done?'done':''} ${(!m.done && miss.length)?'lack':''}">
       <div class="row1">
         <span class="badge ${m.type==='出発'?'dep':''}">${esc(m.type||'')}</span>
         <span class="main">${mdFmt(m.date)}　${esc(m.carrier||'（運航者未記入）')}　${m.flight?('便名'+esc(m.flight)):''}</span>
       </div>
       <div class="sub">${m.time?('延長時刻（いつまで）：'+esc(m.time)):'（延長時刻の記入なし）'}</div>
       <div class="sub">${m.reason?esc(m.reason):'（理由の記入なし）'}</div>
-      ${(m.landingTime||m.blockinTime||m.towerTime2) ? `<div class="sub">${m.landingTime?(esc(shortLabel(m.type,'landing'))+'：'+esc(m.landingTime)+'　'):''}${m.blockinTime?(esc(shortLabel(m.type,'blockin'))+'：'+esc(m.blockinTime)+'　'):''}${m.towerTime2?('タワー伝達②：'+esc(m.towerTime2)):''}</div>` : ''}
+      ${(m.landingTime||m.blockinTime||m.towerTime2) ? `<div class="sub">${m.landingTime?('ランディング：'+esc(m.landingTime)+'　'):''}${m.blockinTime?('ブロックイン：'+esc(m.blockinTime)+'　'):''}${m.towerTime2?('タワー伝達②：'+esc(m.towerTime2)):''}</div>` : ''}
       <div class="meta">許可時刻：${esc(m.received||'-')}${m.towerTime?('　・　タワー伝達①：'+esc(m.towerTime)):''}${m.done?'　・　本体ツール入力済み':''}</div>
+      ${(!m.done && miss.length) ? `<div class="lackmsg">未記入：${miss.join('・')}</div>` : ''}
       <div class="actions">
         <button type="button" class="btn mini done-btn ${m.done?'is-done':''}" onclick="toggleDone(${m.id})">${m.done?'✔ 入力済み':'未入力'}</button>
-        <button type="button" class="btn mini" onclick="editMemo(${m.id})">編集</button>
-        <button type="button" class="btn mini mail" onclick="mailOne(${m.id})">✉️ メール</button>
+        <button type="button" class="btn mini" onclick="editMemo(${m.id})">編集・時刻を追記</button>
         <button type="button" class="btn mini danger" onclick="deleteMemo(${m.id})">削除</button>
       </div>
-    </div>
-  `).join('');
+    </div>`;
+  }).join('');
 }
 
 function init(){
-  loadFontSize();
-  loadMailTo();
   load();
   resetForm();
   renderList();
