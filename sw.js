@@ -1,6 +1,10 @@
 // オフラインでも動くようにするための仕組み（サービスワーカー）。
-// 初回アクセス時にファイル一式を端末に保存し、以降はインターネットなしでも表示できます。
+// 電波があるときは常に最新のファイルを使い、電波がない場所でだけ、
+// 前回保存した内容（キャッシュ）を使って表示します。
 // メモのデータ自体はこのファイルとは別に、端末内(localStorage)に保存されます。
+//
+// ★更新のたびに、この CACHE_NAME の数字を1つ増やしてください。
+//   （数字を変えないと、iPhone側が「更新なし」と判断し、新しい内容に切り替わらないことがあります）
 const CACHE_NAME = 'ext-phone-memo-v2';
 const ASSETS = [
   './',
@@ -24,19 +28,17 @@ self.addEventListener('activate', (e) => {
   );
 });
 
-// キャッシュ優先：オフラインでも必ず開ける。オンライン時は裏で最新版を取得して次回に反映。
+// ネットワーク優先：電波があれば必ず最新版を取りに行き、取れたらキャッシュも更新。
+// 電波がない・取得に失敗したときだけ、保存済みの内容を表示します。
 self.addEventListener('fetch', (e) => {
   if (e.request.method !== 'GET') return;
   e.respondWith(
-    caches.match(e.request).then((cached) => {
-      const fetched = fetch(e.request).then((res) => {
-        if (res && res.ok) {
-          const clone = res.clone();
-          caches.open(CACHE_NAME).then((c) => c.put(e.request, clone));
-        }
-        return res;
-      }).catch(() => cached);
-      return cached || fetched;
-    })
+    fetch(e.request).then((res) => {
+      if (res && res.ok) {
+        const clone = res.clone();
+        caches.open(CACHE_NAME).then((c) => c.put(e.request, clone));
+      }
+      return res;
+    }).catch(() => caches.match(e.request))
   );
 });
