@@ -50,14 +50,23 @@
     width:17px; height:17px; border-radius:50%; background:var(--navy); color:#fff;
     font-size:10.5px; font-weight:700; margin-right:6px; vertical-align:middle;
   }
-  input[type=date], input[type=time], input[type=text], textarea{
+  input[type=date], input[type=time], input[type=text], input[type=tel], textarea{
     width:100%; padding:11px 12px; border:1px solid #c9d3de; border-radius:9px;
     font-size:16px; font-family:inherit; background:#fbfcfe; -webkit-appearance:none;
   }
   input:focus, textarea:focus{ outline:none; border-color:var(--navy-light); box-shadow:0 0 0 3px rgba(27,90,148,.15); background:#fff; }
   textarea{ resize:vertical; min-height:52px; }
 
-  .timerow{ display:flex; gap:8px; align-items:center; }
+  .timerow{ display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+  .timerow input{ min-width:120px; }
+  /* 連絡時刻を記録してそのまま電話をかけるボタン */
+  .callbtn{
+    flex:0 0 auto; padding:11px 14px; border-radius:9px; border:1.5px solid var(--gold);
+    background:var(--gold); color:#fff; font-size:13.5px; font-weight:700; font-family:inherit; cursor:pointer;
+    text-decoration:none; display:inline-flex; align-items:center;
+  }
+  .callbtn:active{ background:#a07825; }
+  .callbtn.off{ background:#fff; color:var(--gold); }
   .timerow input{ flex:1; }
   .nowbtn{
     flex:0 0 auto; padding:11px 14px; border-radius:9px; border:1.5px solid var(--navy-light);
@@ -161,6 +170,46 @@
     background:none; border:none; color:var(--navy-light); font-size:12px; font-weight:700;
     text-decoration:underline; cursor:pointer; font-family:inherit; padding:2px 4px;
   }
+
+  /* ===== iPad・大きい画面向け =====
+     700px以上：文字とボタンを大きく（指で押しやすく）
+     980px以上：左に入力、右に一覧とバックアップの2列 */
+  @media (min-width:700px){
+    main{ max-width:680px; padding:16px 16px 50px; }
+    header{ padding:calc(14px + env(safe-area-inset-top)) 22px 14px; }
+    header h1{ font-size:21px; }
+    header p{ font-size:13px; }
+    .card{ padding:18px; border-radius:14px; }
+    h2{ font-size:16.5px; }
+    label{ font-size:13.5px; margin:16px 0 6px; }
+    input[type=date], input[type=time], input[type=text], textarea, .filters select, .filters input{
+      font-size:17px; padding:13px 14px;
+    }
+    textarea{ min-height:68px; }
+    .nowbtn{ padding:13px 18px; font-size:15px; }
+    .seg button{ padding:17px 6px; font-size:17px; }
+    .pillrow button{ padding:13px 22px; font-size:15.5px; }
+    .btn{ padding:18px; font-size:17px; }
+    .btn.mini{ padding:11px 16px; font-size:13.5px; }
+    details.later > summary{ font-size:14px; }
+    details.help summary{ font-size:13.5px; }
+    details.help .body{ font-size:13.5px; }
+    .memo{ padding:14px 16px; }
+    .memo .main{ font-size:16px; }
+    .memo .sub{ font-size:13.5px; }
+    .memo .badge{ font-size:12px; }
+    .note{ font-size:12.5px; }
+    .datebar{ font-size:13.5px; }
+    .datebar button{ font-size:13.5px; }
+  }
+  @media (min-width:980px){
+    main{
+      max-width:1100px; display:grid; gap:16px; align-items:start;
+      grid-template-columns:minmax(0,1fr) minmax(0,1fr); padding:18px 18px 40px;
+    }
+    main > .card{ margin-bottom:0; }
+    #side > .card:last-child{ margin-bottom:0; }
+  }
 </style>
 </head>
 <body>
@@ -173,7 +222,7 @@
 <main>
 
   <div class="card">
-    <h2 id="form-title">電話の流れのとおりに①→⑦</h2>
+    <h2 id="form-title">電話の流れのとおりに①→⑧</h2>
     <div id="edit_banner" class="edit-banner" style="display:none;"></div>
 
     <div class="datebar">
@@ -214,10 +263,18 @@
       <button type="button" class="nowbtn" onclick="setNow('f_received')">今</button>
     </div>
 
-    <label><span class="step">7</span>管制塔への連絡時刻</label>
+    <label><span class="step">7</span>気象への連絡時刻</label>
+    <div class="timerow">
+      <input type="time" id="f_wx_time">
+      <button type="button" class="nowbtn" onclick="setNow('f_wx_time')">今</button>
+      <button type="button" class="callbtn" onclick="callAndStamp('wx','f_wx_time')">📞 発信</button>
+    </div>
+
+    <label><span class="step">8</span>管制塔への連絡時刻</label>
     <div class="timerow">
       <input type="time" id="f_tower_time">
       <button type="button" class="nowbtn" onclick="setNow('f_tower_time')">今</button>
+      <button type="button" class="callbtn" onclick="callAndStamp('tower','f_tower_time')">📞 発信</button>
     </div>
 
     <button class="btn" id="save_btn" onclick="saveMemo()">＋ 一覧に追加</button>
@@ -242,6 +299,7 @@
       <div class="timerow">
         <input type="time" id="f_tower_time2">
         <button type="button" class="nowbtn" onclick="setNow('f_tower_time2')">今</button>
+        <button type="button" class="callbtn" onclick="callAndStamp('tower','f_tower_time2')">📞 発信</button>
       </div>
     </details>
 
@@ -249,17 +307,20 @@
       <summary>使い方・データの保存について</summary>
       <div class="body">
         <p>このアプリは、様式1（正式な報告書）が届く前に、電話で聞いた内容をとりあえず書き留めておくための「一時メモ」です。あとで様式1が届いたら、内容を見比べながら、パソコンの本体ツール（報告書作成ツール）へあらためて入力してください。</p>
-        <p>上の①〜⑦は、エアラインからの電話の進み方と同じ順番に並べてあります。上から順に埋めて「一覧に追加」を押してください。許可時刻は自動で「今の時刻」が入ります（違う場合は書き換えられます）。</p>
+        <p>上の①〜⑧は、エアラインからの電話の進み方と同じ順番に並べてあります。上から順に埋めて「一覧に追加」を押してください。許可時刻は自動で「今の時刻」が入ります（違う場合は書き換えられます）。</p>
+        <p><b>⑦⑧の「📞 発信」ボタン</b>を押すと、その時の時刻が連絡時刻の欄に入り、続けて電話がかかります。電話番号は、画面の下にある<b>「📞 電話番号の登録」</b>に最初の一度だけ入れておいてください。<b>iPadには電話機能がないため、iPadでは時刻の記録だけ</b>になります（通話はiPhoneから）。</p>
         <p>ランディング・ブロックイン・管制塔への連絡②は、電話を切ったあとに分かる時刻です。一覧の「編集・時刻を追記」から追記してください。</p>
         <ol>
-          <li>初回だけ：SafariでこのページのURLを開き、共有ボタン（□に↑）→「ホーム画面に追加」を押します。</li>
+          <li>初回だけ：SafariでこのページのURLを開き、共有ボタン（□に↑）→「ホーム画面に追加」を押します。共有ボタンは<b>iPhoneは画面の下、iPadは画面の右上</b>にあります。</li>
           <li>以降は、ホーム画面の「延長メモ」アイコンをタップするだけで、アプリとして起動します。</li>
           <li>一度開けば、電波のない場所でも動作します（オフライン対応）。</li>
         </ol>
-        <p class="note">メモのデータはこのiPhoneの中だけに保存され、外部に送信されることはありません。ただし、Safariの設定で「履歴とWebサイトデータを消去」をするとメモも消えます。大事な内容は早めに本体ツールへ転記してください。</p>
+        <p class="note">メモのデータはこの端末（iPhone・iPad）の中だけに保存され、外部に送信されることはありません。<b>iPhoneとiPadで中身は別々です（自動では同期しません）。</b>片方のメモを他方へ移すときは、下の「バックアップを保存する」→もう一方で「バックアップから戻す」を使ってください。ただし、Safariの設定で「履歴とWebサイトデータを消去」をするとメモも消えます。大事な内容は早めに本体ツールへ転記してください。</p>
       </div>
     </details>
   </div>
+
+  <div id="side">
 
   <div class="card">
     <div class="listhead">
@@ -280,7 +341,19 @@
     <button class="btn secondary" onclick="document.getElementById('restore_file').click()">📂 バックアップから戻す</button>
     <input type="file" id="restore_file" accept=".json,application/json" style="display:none" onchange="restoreBackup(this)">
     <button class="btn secondary" onclick="copyAllShown()">📋 表示中のメモをまとめてコピー</button>
-    <p class="note">メモはこのiPhoneの中だけに保存されています。Safariの「履歴とWebサイトデータを消去」や機種変更で消えてしまうため、ときどきバックアップを保存してください。保存したファイルはメールに添付したり、ファイルアプリに置いておけます。</p>
+    <p class="note">メモはこの端末の中だけに保存されています（iPhoneとiPadで別々です）。Safariの「履歴とWebサイトデータを消去」や機種変更で消えてしまうため、ときどきバックアップを保存してください。保存したファイルはメールに添付したり、ファイルアプリに置いておけます。</p>
+  </div>
+
+  <div class="card">
+    <h2>📞 電話番号の登録</h2>
+    <p class="note" style="margin-top:0">ここに入れておくと、⑦⑧の「📞 発信」ボタンから、連絡時刻を記録してそのまま電話をかけられます。番号はこの端末の中だけに保存されます（最初の一度だけの作業です）。</p>
+    <label>気象の電話番号</label>
+    <input type="tel" id="tel_wx" inputmode="tel" placeholder="例：0836-00-0000" oninput="saveTels()">
+    <label>管制塔の電話番号</label>
+    <input type="tel" id="tel_tower" inputmode="tel" placeholder="例：0836-00-0000" oninput="saveTels()">
+    <p class="note" id="tel_status">-</p>
+  </div>
+
   </div>
 
 </main>
@@ -323,6 +396,42 @@ function mdFmt(dateStr){
 
 // 時刻欄に「今の時刻」を入れる
 function setNow(id){ document.getElementById(id).value = nowTimeStr(); }
+
+// ───────── 電話番号の登録と「📞 発信」 ─────────
+const TEL_KEY = 'ext-phone-memo-tel';
+let tels = { wx:'', tower:'' };
+function loadTels(){
+  try{
+    const r = JSON.parse(localStorage.getItem(TEL_KEY) || 'null');
+    if(r) tels = Object.assign(tels, r);
+  }catch(err){}
+  document.getElementById('tel_wx').value = tels.wx || '';
+  document.getElementById('tel_tower').value = tels.tower || '';
+  updateTelStatus();
+}
+function saveTels(){
+  tels.wx = document.getElementById('tel_wx').value.trim();
+  tels.tower = document.getElementById('tel_tower').value.trim();
+  try{ localStorage.setItem(TEL_KEY, JSON.stringify(tels)); }catch(err){}
+  updateTelStatus();
+}
+function updateTelStatus(){
+  const miss = [];
+  if(!tels.wx) miss.push('気象');
+  if(!tels.tower) miss.push('管制塔');
+  document.getElementById('tel_status').textContent =
+    miss.length ? `未登録：${miss.join('・')}（未登録でも「📞 発信」で時刻の記録はできます）` : '登録済みです。⑦⑧の「📞 発信」から電話をかけられます。';
+}
+// 押すと「今の時刻」を連絡時刻に入れてから、電話アプリを呼び出す
+function callAndStamp(which, fieldId){
+  document.getElementById(fieldId).value = nowTimeStr();
+  const num = (tels[which] || '').replace(/[^0-9+]/g, '');
+  if(!num){
+    alert('連絡時刻を記録しました。\n電話もかけたいときは、画面の下にある「📞 電話番号の登録」に番号を入れてください。');
+    return;
+  }
+  window.location.href = 'tel:' + num;
+}
 
 // 発生日は普段は表示だけ。「変更」を押したときだけ日付入力欄を出す。
 function toggleDateEdit(){
@@ -377,6 +486,7 @@ function resetForm(){
   document.getElementById('f_time').value = DEFAULT_EXT_TIME;
   document.getElementById('f_reason').value = '';
   document.getElementById('f_received').value = nowTimeStr();
+  document.getElementById('f_wx_time').value = '';
   document.getElementById('f_tower_time').value = '';
   document.getElementById('f_landing_time').value = '';
   document.getElementById('f_blockin_time').value = '';
@@ -398,7 +508,7 @@ function hideEditBanner(){
   document.getElementById('edit_banner').style.display = 'none';
   document.getElementById('save_btn').textContent = '＋ 一覧に追加';
   document.getElementById('cancel_btn').style.display = 'none';
-  document.getElementById('form-title').textContent = '電話の流れのとおりに①→⑦';
+  document.getElementById('form-title').textContent = '電話の流れのとおりに①→⑧';
 }
 
 function saveMemo(){
@@ -410,7 +520,7 @@ function saveMemo(){
   const rec = {
     date: g('f_date'), type: curType, carrier: g('f_carrier'), flight: g('f_flight'),
     time: g('f_time'), reason: g('f_reason'), received: g('f_received') || nowTimeStr(),
-    towerTime: g('f_tower_time'),
+    wxTime: g('f_wx_time'), towerTime: g('f_tower_time'),
     landingTime: g('f_landing_time'), blockinTime: g('f_blockin_time'),
     towerTime2: g('f_tower_time2')
   };
@@ -441,6 +551,7 @@ function editMemo(id){
   document.getElementById('f_time').value = m.time || '';
   document.getElementById('f_reason').value = m.reason || '';
   document.getElementById('f_received').value = m.received || '';
+  document.getElementById('f_wx_time').value = m.wxTime || '';
   document.getElementById('f_tower_time').value = m.towerTime || '';
   document.getElementById('f_landing_time').value = m.landingTime || '';
   document.getElementById('f_blockin_time').value = m.blockinTime || '';
@@ -474,6 +585,7 @@ function toggleDone(id){
 // あとで書き足す欄が空のままのメモを見つけて知らせる
 function missingFields(m){
   const miss = [];
+  if(!m.wxTime) miss.push('気象連絡');
   if(!m.towerTime) miss.push('管制塔連絡');
   if(!m.landingTime) miss.push('ランディング');
   if(!m.blockinTime) miss.push('ブロックイン');
@@ -514,6 +626,7 @@ function memoToText(m){
   L.push(`理由：${m.reason||''}`);
   L.push(`延長時刻（いつまで）：${m.time||''}`);
   L.push(`許可時刻：${m.received||''}`);
+  L.push(`気象への連絡時刻：${m.wxTime||''}`);
   L.push(`管制塔への連絡時刻：${m.towerTime||''}`);
   L.push(`ランディング：${m.landingTime||''}`);
   L.push(`ブロックイン：${m.blockinTime||''}`);
@@ -635,7 +748,7 @@ function renderList(){
       <div class="sub">${m.time?('延長時刻（いつまで）：'+esc(m.time)):'（延長時刻の記入なし）'}</div>
       <div class="sub">${m.reason?esc(m.reason):'（理由の記入なし）'}</div>
       ${(m.landingTime||m.blockinTime||m.towerTime2) ? `<div class="sub">${m.landingTime?('ランディング：'+esc(m.landingTime)+'　'):''}${m.blockinTime?('ブロックイン：'+esc(m.blockinTime)+'　'):''}${m.towerTime2?('管制塔連絡②：'+esc(m.towerTime2)):''}</div>` : ''}
-      <div class="meta">許可時刻：${esc(m.received||'-')}${m.towerTime?('　・　管制塔連絡：'+esc(m.towerTime)):''}${m.done?'　・　本体ツール入力済み':''}</div>
+      <div class="meta">許可時刻：${esc(m.received||'-')}${m.wxTime?('　・　気象連絡：'+esc(m.wxTime)):''}${m.towerTime?('　・　管制塔連絡：'+esc(m.towerTime)):''}${m.done?'　・　本体ツール入力済み':''}</div>
       ${(!m.done && miss.length) ? `<div class="lackmsg">未記入：${miss.join('・')}</div>` : ''}
       <div class="actions">
         <button type="button" class="btn mini done-btn ${m.done?'is-done':''}" onclick="toggleDone(${m.id})">${m.done?'✔ 入力済み':'未入力'}</button>
@@ -649,6 +762,7 @@ function renderList(){
 
 function init(){
   load();
+  loadTels();
   resetForm();
   renderList();
 }
